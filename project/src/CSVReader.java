@@ -6,8 +6,22 @@ import java.util.Scanner;
 // run: java -cp ../bin CSVReader
 
 public class CSVReader {
-    private String candidatesFile;
-    private String votesFile;
+    private String candidatesFilePath;
+    private String pollFilePath;
+
+
+    public CSVReader(String candidatesFilePath, String pollFilePath) {
+        this.candidatesFilePath = candidatesFilePath;
+        this.pollFilePath = pollFilePath;
+    }
+
+    public String getCandidatesFilePath() {
+        return candidatesFilePath;
+    }
+
+    public String getPollFilePath() {
+        return pollFilePath;
+    }
 
     public void readerCandidates(String candidatesFile) {
         try (FileInputStream fin = new FileInputStream(candidatesFile);

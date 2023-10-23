@@ -19,7 +19,7 @@
 
 	<!-- Pacote. -->	
 	<target name="jar" depends="compile">
-        <jar destfile="deputados.jar" basedir="${bin}">
+        <jar destfile="deputies.jar" basedir="${bin}">
             <manifest>
                 <attribute name="Main-Class" value="${mainClass}"/>
             </manifest>
