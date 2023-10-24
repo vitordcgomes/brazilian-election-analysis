@@ -1,6 +1,8 @@
 import java.io.FileInputStream;
 import java.util.Scanner;
 
+import Election.Election;
+
 // how to compile/run (from 'src' directory):
 // compile: javac -d ../bin CSVReader.java
 // run: java -cp ../bin CSVReader
@@ -11,6 +13,9 @@ public class CSVReader {
 
 
     public CSVReader(String candidatesFilePath, String pollFilePath) {
+
+        //verify try-catch exceptions (file does not exist... )
+
         this.candidatesFilePath = candidatesFilePath;
         this.pollFilePath = pollFilePath;
     }
@@ -23,8 +28,8 @@ public class CSVReader {
         return pollFilePath;
     }
 
-    public void readerCandidates(String candidatesFile) {
-        try (FileInputStream fin = new FileInputStream(candidatesFile);
+    public void candidatesReader(Election poll) {
+        try (FileInputStream fin = new FileInputStream(this.candidatesFilePath);
                 Scanner s = new Scanner(fin, "ISO-8859-1")) {
 
             while (s.hasNextLine()) {
@@ -46,7 +51,7 @@ public class CSVReader {
     
     }
 
-    public void readerVotes(String votesFile) {
+    public void votesReader(Election poll) {
         return;
     }
 }
