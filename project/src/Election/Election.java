@@ -31,6 +31,10 @@ public class Election {
         return new LinkedList<Party>(this.parties.values());
     }
 
+    public void addCandidate(int candidateNumber, Candidate c) {
+        candidates.put(candidateNumber, c);
+    }
+
     public Date getElectionDate() {
         return electionDate;
     }
@@ -45,6 +49,18 @@ public class Election {
 
     public void setSeats(int seats) {
         this.seats = seats;
+    }
+
+    @Override
+    public String toString() {
+        String result="";
+
+        for (Candidate c : candidates.values()) {
+            result += c.getBallotName() + ": (" + c.getCandidateNumber() + ") (" + c.getOfficeOption() + ")\n";
+        }
+
+        result += candidates.size();
+        return result;
     }
 
 }

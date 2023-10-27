@@ -5,6 +5,11 @@ import java.util.regex.Pattern;
 
 import Election.Election;
 
+// how to compile/run (from 'project' directory):
+// ant compile
+// ant jar
+// ant run-estadual || ant run-federal
+
 public class App {
     public static void main(String[] args) {
         
@@ -38,6 +43,7 @@ public class App {
         Election poll = new Election(electionDate, officeOption);
         CSVReader reader = new CSVReader(candidatesFilePath, pollFilePath);
         reader.candidatesReader(poll);
+        //reader.votesReader(poll);
 
         System.out.println("Cargo: " + poll.getOfficeOption());
         System.out.println("Arquivo de Candidatos: " + candidatesFilePath);

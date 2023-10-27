@@ -2,10 +2,7 @@ import java.io.FileInputStream;
 import java.util.Scanner;
 
 import Election.Election;
-
-// how to compile/run (from 'src' directory):
-// compile: javac -d ../bin CSVReader.java
-// run: java -cp ../bin CSVReader
+import Election.Domain.Candidate;
 
 public class CSVReader {
     private String candidatesFilePath;
@@ -31,24 +28,48 @@ public class CSVReader {
     public void candidatesReader(Election poll) {
         try (FileInputStream fin = new FileInputStream(this.candidatesFilePath);
                 Scanner s = new Scanner(fin, "ISO-8859-1")) {
+            
+            String[] token = new String[100];
+            int currentRow = 0;
+            int officeOption = 0;
+
+            if (poll.getOfficeOption().equals("--estadual")) {
+                officeOption = 7;
+            }
+            else officeOption = 6;
 
             while (s.hasNextLine()) {
                 String line = s.nextLine();
                 System.out.println("Processando linha: " + line);
                 Scanner lineScanner = new Scanner(line);
                 lineScanner.useDelimiter(";");
+                int i = 0;
 
                 while(lineScanner.hasNext()) {
-                    String token = lineScanner.next();
-                    System.out.println("Leu: [" + token + "]");
+                    // ADD TRY-CATCH (TOKEN INDEX)
+
+                    token[i] = lineScanner.next().replace("\"", "");
+
+                    //System.out.println("Leu: [" + token[i] + "]");
+                    i++;
                 }
 
+                if (currentRow != 0 && Integer.parseInt(token[13]) == officeOption) {
+                    int candidateNumber = Integer.parseInt(token[16]); 
+                    String candidateBallotName = token[18];
+                    Candidate c = new Candidate(candidateNumber, candidateBallotName, officeOption);
+                    poll.addCandidate(candidateNumber, c);
+                }
+
+                currentRow++;
                 lineScanner.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
+        
+        System.out.println(poll);
+        System.out.println(poll.getOfficeOption());
     }
 
     public void votesReader(Election poll) {

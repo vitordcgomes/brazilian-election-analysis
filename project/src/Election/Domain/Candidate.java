@@ -15,4 +15,22 @@ public class Candidate {
     private int gender; //2 male and 4 female
     private String voteDestinationType; //"Válido (Legenda)" when this votes go to "list votes"
     private int nominalVotes;
+
+    public Candidate(int number, String ballotName, int office) {
+        this.candidateNumber = number;
+        this.ballotName = ballotName;
+        this.officeOption = office;
+    }
+
+    public String getBallotName() {
+        return ballotName;
+    }
+
+    public int getCandidateNumber() {
+        return candidateNumber;
+    }
+
+    public int getOfficeOption() {
+        return officeOption;
+    }
 }
