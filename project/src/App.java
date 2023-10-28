@@ -43,7 +43,10 @@ public class App {
         Election poll = new Election(electionDate, officeOption);
         CSVReader reader = new CSVReader(candidatesFilePath, pollFilePath);
         reader.candidatesReader(poll);
-        //reader.votesReader(poll);
+        reader.votesReader(poll);
+
+        System.out.println(poll);
+        System.out.println(poll.getOfficeOption());
 
         System.out.println("Cargo: " + poll.getOfficeOption());
         System.out.println("Arquivo de Candidatos: " + candidatesFilePath);

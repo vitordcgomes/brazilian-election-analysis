@@ -38,6 +38,11 @@ public class Candidate {
         this.turnStatus = status;
         this.voteDestinationType = voteDestination;
         this.candidacyCondition = condition;
+        this.nominalVotes = 0;
+    }
+
+    public void addVotes(int votes) {
+        this.nominalVotes += votes;
     }
 
     public int getOfficeOption() {
@@ -88,7 +93,7 @@ public class Candidate {
     public String toString() {
         String result="";
 
-        result = ballotName + " (" + candidateNumber + "): " + partyAcronym + " (" + partyNumber + ")\n";
+        result = ballotName + " (" + candidateNumber + "): " + partyAcronym + " (" + partyNumber + ") (votes: " + nominalVotes + ")\n";
 
         return result;
     }

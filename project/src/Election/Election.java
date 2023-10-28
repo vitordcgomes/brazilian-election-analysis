@@ -9,15 +9,18 @@ import Election.Domain.Party;
 
 public class Election {
     private Map<Integer, Candidate> candidates;
-    private Map<String, Party> parties;
+    private Map<Integer, Party> parties;
     private Date electionDate;
     private String officeOption;
-    private int seats; // == number of electeds 
+    private int seats; // == number of electeds
+    private int listVotes;
+    private int nominalVotes;
+    private int totalVotes;
     
 
     public Election(Date electionDate, String officeOption) {
         this.candidates = new HashMap<Integer, Candidate>();
-        this.parties = new HashMap<String, Party>();
+        this.parties = new HashMap<Integer, Party>();
         this.electionDate = electionDate;
         this.officeOption = officeOption;
         this.seats = 0;
@@ -31,14 +34,47 @@ public class Election {
         return new LinkedList<Party>(this.parties.values());
     }
 
-    public void addParty(String acronym, Party p) {
-        if (hasParty(acronym) == false) {
-            parties.put(acronym, p);
+    public Candidate getCandidate(int number) {
+        return candidates.get(number);
+    }
+
+    public Party getParty(int number) {
+        return parties.get(number);
+    }
+
+    public void addVotes(int votes, int votableNumber) {
+        if (hasParty(votableNumber)) {
+            Party p = parties.get(votableNumber);
+            p.addVotes(votes);
+            this.listVotes += votes;
+        }
+        else if (hasCandidate(votableNumber)) {
+            Candidate c = candidates.get(votableNumber);
+            Party p = parties.get(c.getPartyNumber());
+
+            if (c.getVoteDestinationType().equals("Válido (legenda)")) {
+                p.addVotes(votes);
+                this.listVotes += votes;
+            }
+            else {
+                if (c.getCandidacyCondition() == 2 || c.getCandidacyCondition() == 16) {
+                    c.addVotes(totalVotes);
+                    p.addCandidateVotes(votes, votableNumber);
+                    this.nominalVotes += votes;
+                }
+            }
+            
         }
     }
 
-    public boolean hasParty(String acronym) {
-        return parties.containsKey(acronym);
+    public void addParty(int number, Party p) {
+        if (hasParty(number) == false) {
+            parties.put(number, p);
+        }
+    }
+
+    public boolean hasParty(int number) {
+        return parties.containsKey(number);
     }
 
     public void addCandidate(int candidateNumber, Candidate c) {
@@ -52,7 +88,7 @@ public class Election {
     }
 
     public void addCandidateToParty(Candidate c) {
-        Party p = parties.get(c.getPartyAcronym());
+        Party p = parties.get(c.getPartyNumber());
         p.addCandidate(c.getCandidateNumber(), c);
         //System.out.println("number: " + c.getCandidateNumber() + "\n");
     }
@@ -73,6 +109,22 @@ public class Election {
         this.seats = seats;
     }
 
+    public int getListVotes() {
+        return listVotes;
+    }
+
+    public int getNominalVotes() {
+        return nominalVotes;
+    }
+
+    public int getTotalVotes() {
+        return totalVotes;
+    }
+
+    public void setTotalVotes(int listVotes, int nominalVotes) {
+        this.totalVotes = listVotes + nominalVotes;
+    }
+
     @Override
     public String toString() {
         String result="";
@@ -91,7 +143,11 @@ public class Election {
         }
         result += parties.size() + " (" + sum + ")\n";
 
-        result += candidates.size();
+        result += candidates.size() + "\n";
+
+        result += "list votes: " + listVotes + "\nnominal votes: " + nominalVotes + "\ntotal votes: " + totalVotes + "\n";
+        result += candidates.get(5512) + "\n";
+
         return result;
     }
 
