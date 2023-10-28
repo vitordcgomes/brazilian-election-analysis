@@ -31,8 +31,30 @@ public class Election {
         return new LinkedList<Party>(this.parties.values());
     }
 
+    public void addParty(String acronym, Party p) {
+        if (hasParty(acronym) == false) {
+            parties.put(acronym, p);
+        }
+    }
+
+    public boolean hasParty(String acronym) {
+        return parties.containsKey(acronym);
+    }
+
     public void addCandidate(int candidateNumber, Candidate c) {
-        candidates.put(candidateNumber, c);
+        if (hasCandidate(candidateNumber) == false) {
+            candidates.put(candidateNumber, c);
+        }
+    }
+
+    public boolean hasCandidate(int number) {
+        return candidates.containsKey(number);
+    }
+
+    public void addCandidateToParty(Candidate c) {
+        Party p = parties.get(c.getPartyAcronym());
+        p.addCandidate(c.getCandidateNumber(), c);
+        //System.out.println("number: " + c.getCandidateNumber() + "\n");
     }
 
     public Date getElectionDate() {
@@ -60,6 +82,14 @@ public class Election {
                         + ") (PSG: " + c.getPartyAcronym() + ") (FNR: " + c.getFederationNumber() + ") (BD: " + c.getBirthDate() + ") (GN: " + c.getGender() 
                         + ") (TS: " + c.getTurnStatus() + ") (VD: " + c.getVoteDestinationType() + ") (CD: " + c.getCandidacyCondition() + ")\n";
         }
+
+        int sum = 0;
+
+        for (Party p : parties.values()) {
+            result += p.toString();
+            sum += p.getNumberOfCandidates();
+        }
+        result += parties.size() + " (" + sum + ")\n";
 
         result += candidates.size();
         return result;

@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 import Election.Election;
 import Election.Domain.Candidate;
+import Election.Domain.Party;
 
 public class CSVReader {
     private String candidatesFilePath;
@@ -40,7 +41,7 @@ public class CSVReader {
 
             while (s.hasNextLine()) {
                 String line = s.nextLine();
-                System.out.println("Processando linha: " + line);
+                //System.out.println("Processando linha: " + line);
                 Scanner lineScanner = new Scanner(line);
                 lineScanner.useDelimiter(";");
                 int i = 0;
@@ -70,10 +71,17 @@ public class CSVReader {
                     String voteDestinationType = token[67];             /* "NM_TIPO_DESTINACAO_VOTOS" */
                     int candidacyCondition = stringToInt(token[68]);    /* "CD_SITUACAO_CANDIDATO_TOT" */
 
+                    String partyName = token[29];                       /* NM_PARTIDO */
+
                     Candidate c = new Candidate(officeOption, candidateNumber, candidateBallotName, partyNumber, partyAcronym, 
                                                 federationNumber, birthDate, gender, turnStatus, voteDestinationType, candidacyCondition);
 
+                    Party p = new Party(partyNumber, partyAcronym, partyName);
+                    //p.addCandidate(candidateNumber, c);
+                    poll.addParty(partyAcronym, p);
+                    poll.addCandidateToParty(c);
                     poll.addCandidate(candidateNumber, c);
+                    
                 }
 
                 currentRow++;

@@ -83,4 +83,13 @@ public class Candidate {
     public int getCandidacyCondition() {
         return candidacyCondition;
     }
+
+    @Override
+    public String toString() {
+        String result="";
+
+        result = ballotName + " (" + candidateNumber + "): " + partyAcronym + " (" + partyNumber + ")\n";
+
+        return result;
+    }
 }
