@@ -56,7 +56,9 @@ public class Election {
         String result="";
 
         for (Candidate c : candidates.values()) {
-            result += c.getBallotName() + ": (" + c.getCandidateNumber() + ") (" + c.getOfficeOption() + ")\n";
+            result += c.getBallotName() + ": (NR: " + c.getCandidateNumber() + ") (OF: " + c.getOfficeOption() + ") (PNR: " + c.getPartyNumber() 
+                        + ") (PSG: " + c.getPartyAcronym() + ") (FNR: " + c.getFederationNumber() + ") (BD: " + c.getBirthDate() + ") (GN: " + c.getGender() 
+                        + ") (TS: " + c.getTurnStatus() + ") (VD: " + c.getVoteDestinationType() + ") (CD: " + c.getCandidacyCondition() + ")\n";
         }
 
         result += candidates.size();
