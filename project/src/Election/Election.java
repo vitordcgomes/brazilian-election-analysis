@@ -42,7 +42,7 @@ public class Election {
         return parties.get(number);
     }
 
-    public void addVotes(int votes, int votableNumber) {
+    public void addVotes(int votes, int votableNumber, String office) {
         if (hasParty(votableNumber)) {
             Party p = parties.get(votableNumber);
             p.addVotes(votes);
@@ -66,6 +66,23 @@ public class Election {
                 }
             }
             
+        }
+        else if (!hasCandidate(votableNumber) && !hasParty(votableNumber) && office.equalsIgnoreCase(this.officeOption)) {
+            // votableNumber to string
+            String numberString = Integer.toString(votableNumber);
+
+            // verify at least 2 characters
+            if (numberString.length() >= 2) {
+                // get 2 first digits = party number
+                String twoDigits = numberString.substring(0, 2);
+
+                // convert twoDigits back to number
+                int partyNum = Integer.parseInt(twoDigits);
+
+                Party p = parties.get(partyNum);
+                p.addVotes(votes);
+                this.listVotes += votes;
+            }
         }
     }
 

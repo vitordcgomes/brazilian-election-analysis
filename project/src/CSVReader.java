@@ -68,34 +68,32 @@ public class CSVReader {
 
                     if (stringToInt(token[13]) == officeOption /* "CD_CARGO" */) {
 
-                    int candidateNumber = stringToInt(token[16]);       /* "NR_CANDIDATO" */
-                    String candidateBallotName = token[18];             /* "NM_URNA_CANDIDATO" */
-                    //int partyNumber = stringToInt(token[27]);           /* "NR_PARTIDO" */
-                    //String partyAcronym = token[28];                    /* "SG_PARTIDO" */
-                    int federationNumber = stringToInt(token[30]);      /* "NR_FEDERACAO" */
-                    String birthDate = token[42];                       /* "DT_NASCIMENTO" */
-                    int gender = stringToInt(token[45]);                /* "CD_GENERO" */
-                    int turnStatus = stringToInt(token[56]);            /* "CD_SIT_TOT_TURNO" */
-                    String voteDestinationType = token[67];             /* "NM_TIPO_DESTINACAO_VOTOS" */
-                    int candidacyCondition = stringToInt(token[68]);    /* "CD_SITUACAO_CANDIDATO_TOT" */
+                        int candidateNumber = stringToInt(token[16]);       /* "NR_CANDIDATO" */
+                        String candidateBallotName = token[18];             /* "NM_URNA_CANDIDATO" */
+                        int federationNumber = stringToInt(token[30]);      /* "NR_FEDERACAO" */
+                        String birthDate = token[42];                       /* "DT_NASCIMENTO" */
+                        int gender = stringToInt(token[45]);                /* "CD_GENERO" */
+                        int turnStatus = stringToInt(token[56]);            /* "CD_SIT_TOT_TURNO" */
+                        String voteDestinationType = token[67];             /* "NM_TIPO_DESTINACAO_VOTOS" */
+                        int candidacyCondition = stringToInt(token[68]);    /* "CD_SITUACAO_CANDIDATO_TOT" */
 
-                    //String partyName = token[29];                       /* "NM_PARTIDO" */
-
-                    Candidate c = new Candidate(officeOption, candidateNumber, candidateBallotName, partyNumber, partyAcronym, 
-                                                federationNumber, birthDate, gender, turnStatus, voteDestinationType, candidacyCondition);
-
-                    //Party p = new Party(partyNumber, partyAcronym, partyName);
-    
-                    //poll.addParty(partyNumber, p); // os partidos "sumidos" nem chegam a entrar aqui
-                    poll.addCandidateToParty(c);
-                    poll.addCandidate(candidateNumber, c);
+                        if (candidacyCondition == 2 || candidacyCondition == 16) {
+                            Candidate c = new Candidate(officeOption, candidateNumber, candidateBallotName, partyNumber, partyAcronym, 
+                                                    federationNumber, birthDate, gender, turnStatus, voteDestinationType, candidacyCondition);
+                            
+                            poll.addCandidateToParty(c);
+                            poll.addCandidate(candidateNumber, c);
+                        }
+                
                     }
+        
                 }
-
                 currentRow++;
                 lineScanner.close();
+
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -107,11 +105,16 @@ public class CSVReader {
             String[] token = new String[30];
             int currentRow = 0;
             int officeOption = 0;
+            String officeString="";
 
             if (poll.getOfficeOption().equals("--estadual")) {
                 officeOption = 7;
+                officeString = "--estadual";
             }
-            else officeOption = 6;
+            else  {
+                officeOption = 6;
+                officeString = "--federal";
+            }
 
             while (s.hasNextLine()) {
                 String line = s.nextLine();
@@ -133,11 +136,12 @@ public class CSVReader {
 
                 if (currentRow != 0 && stringToInt(token[17]) == officeOption /* "CD_CARGO" */) { // row != csv header && officeOption == same as command line input
 
+                
                     int votableNumber = stringToInt(token[19]);         /* "NR_VOTAVEL" */
                     int totalVotes = stringToInt(token[21]);            /* "QT_VOTOS" */
 
                     if (votableNumber != 95 && votableNumber != 96 && votableNumber != 97 && votableNumber != 98) { // blank, invalid or spoiled votes
-                        poll.addVotes(totalVotes, votableNumber);
+                        poll.addVotes(totalVotes, votableNumber, officeString); 
                     }
                     
                 }
