@@ -60,7 +60,7 @@ public class Report {
 
         int pos = 1; 
         for (Candidate c : sortCandidates) {
-            if (pos > 30) break;
+            if (pos > this.seats) break;
             System.out.println(pos + " - " + c.changeName() + " (" + c.getPartyAcronym() + ", " + n.format(c.getNominalVotes()) + " votos)");
             pos++;
         }
@@ -94,7 +94,7 @@ public class Report {
 
         int pos = 1; 
         for (Candidate c : sortCandidates) {
-            if (c.isElected() && pos > 30) {
+            if (c.isElected() && pos > this.seats) {
                 System.out.println(pos + " - " + c.changeName() + " (" + c.getPartyAcronym() + ", " + n.format(c.getNominalVotes()) + " votos)");
             }
             pos++;
