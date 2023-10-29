@@ -14,9 +14,11 @@ public class Report {
     private Election poll;
     private List<Candidate> sortCandidates;
     private List<Party> sortParties;
+    private int seats;
 
     public Report(Election poll) {
         this.poll = poll;
+        this.seats = poll.getSeats();
 
         this.sortCandidates = poll.getCandidates();
         Collections.sort(this.sortCandidates);
@@ -58,7 +60,7 @@ public class Report {
 
         int pos = 1; 
         for (Candidate c : sortCandidates) {
-            if (pos > 10) break;
+            if (pos > 30) break;
             System.out.println(pos + " - " + c.changeName() + " (" + c.getPartyAcronym() + ", " + n.format(c.getNominalVotes()) + " votos)");
             pos++;
         }
@@ -73,12 +75,13 @@ public class Report {
 
         int pos = 1; 
         for (Candidate c : sortCandidates) {
-            if (pos > 10) break;
+            if (pos > this.seats) break;
 
             if (!c.isElected()) {
-                System.out.println(pos + " - " + c.changeName() + " (" + c.getPartyAcronym() + ", " + n.format(c.getNominalVotes()) + " votos)");
+                System.out.println(pos + " - " + c.changeName() + " (" + c.getPartyAcronym() + ", " + n.format(c.getNominalVotes()) + " votos)");  
             }
             pos++;
+            
         }
 
         System.out.print("\n");
@@ -91,7 +94,7 @@ public class Report {
 
         int pos = 1; 
         for (Candidate c : sortCandidates) {
-            if (c.isElected() && pos > 10) {
+            if (c.isElected() && pos > 30) {
                 System.out.println(pos + " - " + c.changeName() + " (" + c.getPartyAcronym() + ", " + n.format(c.getNominalVotes()) + " votos)");
             }
             pos++;
@@ -107,9 +110,17 @@ public class Report {
 
         int pos = 1;
         for (Party p : sortParties) {
-            System.out.print(pos + " - " + p.getPartyAcronym() + " - " + p.getPartyNumber() + ", " + n.format(p.getTotalVotes()) +
-                                 " votos (" + n.format(p.getNominalVotes()) + " nominais e " + n.format(p.getListVotes()) + " de legenda), " + 
-                                 p.getNumberOfElecteds());
+            String votes = n.format(p.getNominalVotes());
+            String qtdVotes =  n.format(p.getTotalVotes());
+
+            System.out.print(pos + " - " + p.getPartyAcronym() + " - " + p.getPartyNumber() + ", " + n.format(p.getTotalVotes()));
+
+            if (qtdVotes.equals("0")) System.out.print (" voto (" + votes);
+            else System.out.print (" votos (" + votes);
+
+            if (votes.equals("0")) System.out.print(" nominal e " + n.format(p.getListVotes()) + " de legenda), " + p.getNumberOfElecteds());
+            else System.out.print(" nominais e " + n.format(p.getListVotes()) + " de legenda), " + p.getNumberOfElecteds());
+            
             
             if (p.getNumberOfElecteds() > 1) System.out.println(" candidatos eleitos");
             else System.out.println(" candidato eleito");

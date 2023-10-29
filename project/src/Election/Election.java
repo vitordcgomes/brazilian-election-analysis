@@ -30,7 +30,7 @@ public class Election {
         return new LinkedList<Candidate>(this.candidates.values()); // Linked List makes it easier to sort by vote afterwards
     }
 
-    public LinkedList<Party> getParties() {
+    public LinkedList<Party> getParties() {        
         return new LinkedList<Party>(this.parties.values());
     }
 
@@ -70,7 +70,9 @@ public class Election {
     }
 
     public void addParty(int number, Party p) {
+        //System.out.print(p);
         if (hasParty(number) == false) {
+            //System.out.println(p);
             parties.put(number, p);
         }
     }

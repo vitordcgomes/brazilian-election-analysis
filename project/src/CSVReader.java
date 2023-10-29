@@ -40,6 +40,7 @@ public class CSVReader {
             else officeOption = 6;
 
             while (s.hasNextLine()) {
+
                 String line = s.nextLine();
                 Scanner lineScanner = new Scanner(line);
                 lineScanner.useDelimiter(";");
@@ -55,14 +56,22 @@ public class CSVReader {
                     }
 
                     i++;
-                }                   
+                }   
 
-                if (currentRow != 0 && stringToInt(token[13]) == officeOption /* "CD_CARGO" */) { // row != csv header && officeOption == same as command line input
+                if (currentRow != 0) { // row != csv header && officeOption == same as command line input
+
+                    int partyNumber = stringToInt(token[27]);           /* "NR_PARTIDO" */
+                    String partyAcronym = token[28];                    /* "SG_PARTIDO" */
+                    String partyName = token[29];                       /* "NM_PARTIDO" */
+                    Party p = new Party(partyNumber, partyAcronym, partyName);
+                    poll.addParty(partyNumber, p); // os partidos "sumidos" nem chegam a entrar aqui
+
+                    if (stringToInt(token[13]) == officeOption /* "CD_CARGO" */) {
 
                     int candidateNumber = stringToInt(token[16]);       /* "NR_CANDIDATO" */
                     String candidateBallotName = token[18];             /* "NM_URNA_CANDIDATO" */
-                    int partyNumber = stringToInt(token[27]);           /* "NR_PARTIDO" */
-                    String partyAcronym = token[28];                    /* "SG_PARTIDO" */
+                    //int partyNumber = stringToInt(token[27]);           /* "NR_PARTIDO" */
+                    //String partyAcronym = token[28];                    /* "SG_PARTIDO" */
                     int federationNumber = stringToInt(token[30]);      /* "NR_FEDERACAO" */
                     String birthDate = token[42];                       /* "DT_NASCIMENTO" */
                     int gender = stringToInt(token[45]);                /* "CD_GENERO" */
@@ -70,17 +79,17 @@ public class CSVReader {
                     String voteDestinationType = token[67];             /* "NM_TIPO_DESTINACAO_VOTOS" */
                     int candidacyCondition = stringToInt(token[68]);    /* "CD_SITUACAO_CANDIDATO_TOT" */
 
-                    String partyName = token[29];                       /* "NM_PARTIDO" */
+                    //String partyName = token[29];                       /* "NM_PARTIDO" */
 
                     Candidate c = new Candidate(officeOption, candidateNumber, candidateBallotName, partyNumber, partyAcronym, 
                                                 federationNumber, birthDate, gender, turnStatus, voteDestinationType, candidacyCondition);
 
-                    Party p = new Party(partyNumber, partyAcronym, partyName);
-
-                    poll.addParty(partyNumber, p);
+                    //Party p = new Party(partyNumber, partyAcronym, partyName);
+    
+                    //poll.addParty(partyNumber, p); // os partidos "sumidos" nem chegam a entrar aqui
                     poll.addCandidateToParty(c);
                     poll.addCandidate(candidateNumber, c);
-                    
+                    }
                 }
 
                 currentRow++;

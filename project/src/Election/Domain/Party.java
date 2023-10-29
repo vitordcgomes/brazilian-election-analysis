@@ -107,6 +107,9 @@ public class Party implements Comparable<Party> {
         // Returns < 0 if o < this
         // Returns 0 if o == this
         // returns > 0 if o > this
+        if (o.totalVotes == this.totalVotes) {
+            return Integer.compare(this.partyNumber, o.partyNumber);
+        }
         return Integer.compare(o.totalVotes, this.totalVotes);
     }
 }
