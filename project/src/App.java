@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 import Election.Election;
+import Election.Report.Report;
 
 // how to compile/run (from 'project' directory):
 // ant compile
@@ -46,12 +47,23 @@ public class App {
         reader.votesReader(poll);
 
         System.out.println(poll);
-        System.out.println(poll.getOfficeOption());
 
         System.out.println("Cargo: " + poll.getOfficeOption());
         System.out.println("Arquivo de Candidatos: " + candidatesFilePath);
         System.out.println("Arquivo de Votação: " + pollFilePath);
         System.out.println("Data da Eleição: " + poll.getElectionDate());
+
+        Report report = new Report(poll);
+        report.report1();
+        report.report2();
+        report.report3();
+        report.report4();
+        report.report5();
+        report.report6(); // partidos faltando: MDB, PSTU (??) - problema na adição de partidos ou alguma verificação anterior tlvz
+        report.report7(); // corrigir lógica de impressão
+        report.report8();
+        report.report9();
+        report.report10();
 
     }
 }

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class Party {
+public class Party implements Comparable<Party> {
     private int partyNumber;
     private String partyAcronym;
     private String partyName;
@@ -27,8 +27,10 @@ public class Party {
     }
 
     public void addCandidate(int candidateNumber, Candidate c) {
-        candidates.put(candidateNumber, c);
-        numberOfCandidates+=1;
+        if (candidates.containsKey(candidateNumber) == false) {
+            candidates.put(candidateNumber, c);
+            numberOfCandidates+=1;
+        }
     }
 
     public void addVotes(int votes) {
@@ -61,6 +63,16 @@ public class Party {
         return numberOfCandidates;
     }
 
+    public int getNumberOfElecteds() {
+        int sum = 0;
+
+        for (Candidate c : candidates.values()) {
+            if (c.isElected()) sum++;
+        }
+
+        return sum;
+    }
+
     public int getListVotes() {
         return listVotes;
     }
@@ -73,14 +85,14 @@ public class Party {
         return totalVotes;
     }
 
-    public void setTotalVotes(int listVotes, int nominalVotes) {
-        this.totalVotes = listVotes + nominalVotes;
+    public void setTotalVotes() {
+        this.totalVotes = this.listVotes + this.nominalVotes;
     }
 
     @Override
     public String toString() {
         String result="";
-        
+
         result = partyName + " (" + partyAcronym + "): " + partyNumber + " => " + candidates.size() + " candidatos, " + this.totalVotes + " votes.\n";
 
         for (Candidate c : candidates.values()) {
@@ -88,5 +100,13 @@ public class Party {
         }
         
         return result;
+    }
+
+    @Override
+    public int compareTo(Party o) {
+        // Returns < 0 if o < this
+        // Returns 0 if o == this
+        // returns > 0 if o > this
+        return Integer.compare(o.totalVotes, this.totalVotes);
     }
 }

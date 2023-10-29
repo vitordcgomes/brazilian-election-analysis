@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Candidate {
+public class Candidate implements Comparable<Candidate> {
     private int officeOption; //6 == federal; 7 == state
     private int candidateNumber;
     private String ballotName;
@@ -17,6 +17,7 @@ public class Candidate {
     private String voteDestinationType; //"Válido (Legenda)" when this votes go to "list votes"
     private int candidacyCondition; //2 or 16 to accepted candidacy
     private int nominalVotes;
+
 
     public Candidate(int office, int number, String ballotName, int partyNumber, String partyAcronym, int federationNumber, String birthDate,  int gender, int status, String voteDestination, int condition) {
 
@@ -89,6 +90,24 @@ public class Candidate {
         return candidacyCondition;
     }
 
+    public int getNominalVotes() {
+        return nominalVotes;
+    }
+
+    public boolean isElected() {
+        if (turnStatus == 2 || turnStatus == 3) {
+            return true;
+        }
+        else return false;
+    }
+
+    public String changeName() {
+        if (this.federationNumber != -1) {
+            return "*" + this.ballotName;
+        }
+        else return this.ballotName;
+    }
+
     @Override
     public String toString() {
         String result="";
@@ -96,5 +115,13 @@ public class Candidate {
         result = ballotName + " (" + candidateNumber + "): " + partyAcronym + " (" + partyNumber + ") (votes: " + nominalVotes + ")\n";
 
         return result;
+    }
+
+    @Override
+    public int compareTo(Candidate o) {
+        // Returns < 0 if o < this
+        // Returns 0 if o == this
+        // returns > 0 if o > this
+        return Integer.compare(o.nominalVotes, this.nominalVotes);
     }
 }

@@ -52,12 +52,14 @@ public class Election {
             Candidate c = candidates.get(votableNumber);
             Party p = parties.get(c.getPartyNumber());
 
-            if (c.getVoteDestinationType().equals("Válido (legenda)")) {
+            if (c.getVoteDestinationType().equalsIgnoreCase("Válido (legenda)")) {
                 p.addVotes(votes);
                 this.listVotes += votes;
             }
             else {
-                if (c.getCandidacyCondition() == 2 || c.getCandidacyCondition() == 16) {
+                if ((c.getCandidacyCondition() == 2 || c.getCandidacyCondition() == 16) && 
+                    c.getVoteDestinationType().equalsIgnoreCase("Válido")) {
+                        
                     c.addVotes(totalVotes);
                     p.addCandidateVotes(votes, votableNumber);
                     this.nominalVotes += votes;
@@ -80,6 +82,8 @@ public class Election {
     public void addCandidate(int candidateNumber, Candidate c) {
         if (hasCandidate(candidateNumber) == false) {
             candidates.put(candidateNumber, c);
+
+            if (c.isElected()) seats += 1;
         }
     }
 
@@ -121,8 +125,12 @@ public class Election {
         return totalVotes;
     }
 
-    public void setTotalVotes(int listVotes, int nominalVotes) {
-        this.totalVotes = listVotes + nominalVotes;
+    public void setTotalVotes() {
+        this.totalVotes = this.listVotes + this.nominalVotes;
+
+        for (Party p : parties.values()) {
+            p.setTotalVotes();
+        }
     }
 
     @Override
@@ -146,7 +154,7 @@ public class Election {
         result += candidates.size() + "\n";
 
         result += "list votes: " + listVotes + "\nnominal votes: " + nominalVotes + "\ntotal votes: " + totalVotes + "\n";
-        result += candidates.get(5512) + "\n";
+        //result += candidates.get(5512) + " " + candidates.get(5512).getVoteDestinationType() + "\n";
 
         return result;
     }
