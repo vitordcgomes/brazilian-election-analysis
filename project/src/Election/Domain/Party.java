@@ -14,9 +14,11 @@ public class Party implements Comparable<Party> {
     private int totalVotes; //listVotes + nominalVotes
 
     private Map<Integer, Candidate> candidates;
+    private Map<Integer, Candidate> dismissedCandidates;
 
     public Party(int number, String acronym, String name) {
         this.candidates = new HashMap<Integer, Candidate>();
+        this.dismissedCandidates = new HashMap<Integer, Candidate>();
         this.partyNumber = number;
         this.partyAcronym = acronym;
         this.partyName = name;
@@ -31,6 +33,16 @@ public class Party implements Comparable<Party> {
             candidates.put(candidateNumber, c);
             numberOfCandidates+=1;
         }
+    }
+
+    public void addDismissedCandidate(int candidateNumber, Candidate c) {
+        if (dismissedCandidates.containsKey(candidateNumber) == false) {
+            dismissedCandidates.put(candidateNumber, c);
+        }
+    }
+
+    public boolean hasDismissedCandidate(int candidateNumber) {
+        return dismissedCandidates.containsKey(candidateNumber);
     }
 
     public void addVotes(int votes) {

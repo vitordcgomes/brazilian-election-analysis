@@ -67,7 +67,7 @@ public class Election {
             }
             
         }
-        else if (!hasCandidate(votableNumber) && !hasParty(votableNumber) && office.equalsIgnoreCase(this.officeOption)) {
+        else if (!hasCandidate(votableNumber) && !hasParty(votableNumber)) {
             // votableNumber to string
             String numberString = Integer.toString(votableNumber);
 
@@ -79,9 +79,14 @@ public class Election {
                 // convert twoDigits back to number
                 int partyNum = Integer.parseInt(twoDigits);
 
-                Party p = parties.get(partyNum);
-                p.addVotes(votes);
-                this.listVotes += votes;
+                if (hasParty(partyNum)) {
+                    Party p = parties.get(partyNum);
+
+                    if (p.hasDismissedCandidate(votableNumber)) {
+                        p.addVotes(votes);
+                        this.listVotes += votes;
+                    }
+                }
             }
         }
     }
@@ -114,6 +119,11 @@ public class Election {
         Party p = parties.get(c.getPartyNumber());
         p.addCandidate(c.getCandidateNumber(), c);
         //System.out.println("number: " + c.getCandidateNumber() + "\n");
+    }
+
+    public void addDismissedCandidateToParty(Candidate c) {
+        Party p = parties.get(c.getPartyNumber());
+        p.addDismissedCandidate(c.getCandidateNumber(), c);
     }
 
     public Date getElectionDate() {
