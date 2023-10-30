@@ -185,10 +185,24 @@ public class Report {
         }
 
         int pos = 1;
+        String mostVotesString="";
+        String leastVotesString="";
+
         for (int idx = 0; idx < size; idx++) {
+
+            if (mostVoted[idx].getNominalVotes() > 1) {
+                mostVotesString = "votos";
+            }
+            else mostVotesString = "voto";
+
+            if (leastVoted[idx].getNominalVotes() > 1) {
+                leastVotesString = "votos";
+            }
+            else leastVotesString = "voto";
+
             System.out.println(pos + " - " + mostVoted[idx].getPartyAcronym() + " - " + mostVoted[idx].getPartyNumber() + ", " + mostVoted[idx].getBallotName() + " (" + mostVoted[idx].getCandidateNumber() + 
-                                ", " + n.format(mostVoted[idx].getNominalVotes()) + " votos)" + " / " + leastVoted[idx].getBallotName() + 
-                                " (" + leastVoted[idx].getCandidateNumber() + ", " + n.format(leastVoted[idx].getNominalVotes()) + " votos)");
+                                ", " + n.format(mostVoted[idx].getNominalVotes()) + " " + mostVotesString +")" + " / " + leastVoted[idx].getBallotName() + 
+                                " (" + leastVoted[idx].getCandidateNumber() + ", " + n.format(leastVoted[idx].getNominalVotes()) + " " + leastVotesString + ")");
 
             pos+=1;
         }

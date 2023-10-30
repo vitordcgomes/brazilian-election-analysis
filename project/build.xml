@@ -30,8 +30,8 @@
 	<target name="run-federal" depends="compile" description="Executa o programa principal, em modo normal.">
 		<java fork="yes" classname="${mainClass}">
 			<arg value="--federal" />
-			<arg value="lib/consulta_cand_2022/consulta_cand_2022_ES.csv" />
-			<arg value="lib/votacao_secao_2022_ES/votacao_secao_2022_ES.csv" />
+			<arg value="candidatos.csv" />
+			<arg value="votacao.csv" />
 			<arg value="02/10/2022" />
 			<classpath>
 				<pathelement path="${bin}" />
@@ -43,8 +43,8 @@
 	<target name="run-estadual" depends="compile" description="Executa o programa principal, em modo normal.">
 		<java fork="yes" classname="${mainClass}">
 			<arg value="--estadual" />
-			<arg value="lib/consulta_cand_2022/consulta_cand_2022_ES.csv" />
-			<arg value="lib/votacao_secao_2022_ES/votacao_secao_2022_ES.csv" />
+			<arg value="candidatos.csv" />
+			<arg value="votacao.csv" />
 			<arg value="02/10/2022" />
 			<classpath>
 				<pathelement path="${bin}" />

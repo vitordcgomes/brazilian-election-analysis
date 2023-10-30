@@ -35,7 +35,7 @@ public class Candidate implements Comparable<Candidate> {
             this.birthDate = sdf.parse(birthDate);
             this.age = calculateAge(this.birthDate, electionDate);
         } catch (ParseException e) {
-            System.out.println("Date parse exception error: " + e.getMessage());
+            //System.out.println("Date parse exception error: " + e.getMessage());
         }
 
         this.gender = gender;
