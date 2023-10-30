@@ -1,8 +1,10 @@
 package Election.Report;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -136,30 +138,65 @@ public class Report {
 
         System.out.println("Primeiro e último colocados de cada partido:");
 
-        int pos = 1;
+        Candidate[] mostVoted = new Candidate[sortParties.size()];
+        Candidate[] leastVoted = new Candidate[sortParties.size()];
+
+        int i = 0;
         for (Party p : sortParties) {
             List<Candidate> partyCandidates = p.getCandidates();
-            Collections.sort(partyCandidates);
-            Candidate first = partyCandidates.get(0);
-            Candidate last = partyCandidates.get(partyCandidates.size() - 1);
 
-            if (first.getNominalVotes() != 0 && last.getNominalVotes() != 0) {
-                System.out.println(pos + " - " + p.getPartyAcronym() + " - " + p.getPartyNumber() + ", " + first.getBallotName() + " (" + 
-                                    first.getCandidateNumber() + ", " + n.format(first.getNominalVotes()) + " votos)" + " / " + last.getBallotName() + " (" + 
-                                    last.getCandidateNumber() + ", " + n.format(last.getNominalVotes()) + " votos)");
-                
-                pos++;
+            if (partyCandidates.size() >= 1 ) {
+                Collections.sort(partyCandidates);
+
+                if (partyCandidates.contains(partyCandidates.get(0)) && partyCandidates.contains(partyCandidates.get(partyCandidates.size() - 1))) {
+                    Candidate first = partyCandidates.get(0);
+                    Candidate last = partyCandidates.get(partyCandidates.size() - 1);
+
+                    mostVoted[i] = first;
+                    leastVoted[i] = last;
+                    i++;
+                }   
             }
-        
+        }
+        int size = i;
+
+        for (int j = 0; j < size; j++) {
+            for (int k = j; k < size; k++) {
+                if (mostVoted[k].getNominalVotes() > mostVoted[j].getNominalVotes()) {
+                    Candidate aux = mostVoted[j];
+                    Candidate aux2 = leastVoted[j];
+
+                    mostVoted[j] = mostVoted[k];
+                    leastVoted[j] = leastVoted[k];
+
+                    mostVoted[k] = aux;
+                    leastVoted[k] = aux2;
+                }
+                else if (mostVoted[k].getNominalVotes() == mostVoted[j].getNominalVotes()) {
+                    if (mostVoted[k].getPartyNumber() < mostVoted[j].getPartyNumber()) {
+                        Candidate aux = mostVoted[j];
+                        Candidate aux2 = leastVoted[j];
+
+                        mostVoted[j] = mostVoted[k];
+                        leastVoted[j] = leastVoted[k];
+
+                        mostVoted[k] = aux;
+                        leastVoted[k] = aux2;
+                    }
+                }
+            }
+        }
+
+        int pos = 1;
+        for (int idx = 0; idx < size; idx++) {
+            System.out.println(pos + " - " + mostVoted[idx].getPartyAcronym() + " - " + mostVoted[idx].getPartyNumber() + ", " + mostVoted[idx].getBallotName() + " (" + mostVoted[idx].getCandidateNumber() + 
+                                ", " + n.format(mostVoted[idx].getNominalVotes()) + " votos)" + " / " + leastVoted[idx].getBallotName() + 
+                                " (" + leastVoted[idx].getCandidateNumber() + ", " + n.format(leastVoted[idx].getNominalVotes()) + " votos)");
+
+            pos+=1;
         }
 
         System.out.print("\n");
-
-        /*
-        for (Candidate c : sortCandidates) {
-
-        }
-        */
     }
 
     public void report8() {
@@ -173,26 +210,7 @@ public class Report {
 
         for (Candidate c : sortCandidates) {
             if (c.isElected()) {
-                Calendar birth = Calendar.getInstance();
-                Calendar election = Calendar.getInstance();
-
-                birth.setTime(c.getBirthDate());
-                election.setTime(poll.getElectionDate());
-
-                int birthYear = birth.get(Calendar.YEAR);
-                int electionYear = election.get(Calendar.YEAR);
-
-                int age = electionYear - birthYear;
-
-                int birthMonth = birth.get(Calendar.MONTH);
-                int electinoMonth = election.get(Calendar.MONTH);
-
-                int birthDay = birth.get(Calendar.DAY_OF_MONTH);
-                int electionDay = election.get(Calendar.DAY_OF_MONTH);
-
-                if (electinoMonth < birthMonth || (electinoMonth == birthMonth && electionDay < birthDay)) {
-                    age -= 1;
-                }
+                int age = c.getAge();
 
                 if (age < 30) {
                     ageGroup[0] += 1;

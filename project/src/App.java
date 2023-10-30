@@ -61,7 +61,7 @@ public class App {
         report.report4(); //pronto
         report.report5(); //pronto
         report.report6(); //pronto
-        //report.report7(); // corrigir lógica de impressão -- ERRO: Exception in thread "main" java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
+        report.report7(); // corrigir lógica de impressão -- ERRO: Exception in thread "main" java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
         report.report8(); //pronto
         report.report9(); //pronto
         report.report10(); //pronto

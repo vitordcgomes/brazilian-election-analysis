@@ -78,7 +78,7 @@ public class CSVReader {
                         int candidacyCondition = stringToInt(token[68]);    /* "CD_SITUACAO_CANDIDATO_TOT" */
 
                         Candidate c = new Candidate(officeOption, candidateNumber, candidateBallotName, partyNumber, partyAcronym, 
-                                                    federationNumber, birthDate, gender, turnStatus, voteDestinationType, candidacyCondition);
+                                                    federationNumber, birthDate, gender, turnStatus, voteDestinationType, candidacyCondition, poll.getElectionDate());
                             
                         if (candidacyCondition == 2 || candidacyCondition == 16) {
                             poll.addCandidateToParty(c);
