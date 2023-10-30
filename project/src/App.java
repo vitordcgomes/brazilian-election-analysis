@@ -46,25 +46,18 @@ public class App {
         reader.candidatesReader(poll);
         reader.votesReader(poll);
 
-        
-        //System.out.println(poll);
-
-        //System.out.println("Cargo: " + poll.getOfficeOption());
-        //System.out.println("Arquivo de Candidatos: " + candidatesFilePath);
-        //System.out.println("Arquivo de Votação: " + pollFilePath);
-        //System.out.println("Data da Eleição: " + poll.getElectionDate());
 
         Report report = new Report(poll);
-        report.report1(); //pronto
-        report.report2(); //pronto
-        report.report3(); //pronto
-        report.report4(); //pronto
-        report.report5(); //pronto
-        report.report6(); //pronto
-        report.report7(); // corrigir lógica de impressão -- ERRO: Exception in thread "main" java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-        report.report8(); //pronto
-        report.report9(); //pronto
-        report.report10(); //pronto
+        report.report1(); 
+        report.report2(); 
+        report.report3(); 
+        report.report4(); 
+        report.report5(); 
+        report.report6(); 
+        report.report7();
+        report.report8(); 
+        report.report9(); 
+        report.report10(); 
 
         
 
