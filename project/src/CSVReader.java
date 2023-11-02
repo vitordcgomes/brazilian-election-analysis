@@ -1,5 +1,6 @@
+import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.util.Scanner;
+import java.io.InputStreamReader;
 
 import Election.Election;
 import Election.Domain.Candidate;
@@ -28,35 +29,26 @@ public class CSVReader {
 
     public void candidatesReader(Election poll) {
         try (FileInputStream fin = new FileInputStream(this.candidatesFilePath);
-                Scanner s = new Scanner(fin, "ISO-8859-1")) {
-            
+            InputStreamReader isr = new InputStreamReader(fin, "ISO-8859-1");
+            BufferedReader br = new BufferedReader(isr)) {
+
             String[] token = new String[80];
             int currentRow = 0;
             int officeOption = 0;
 
             if (poll.getOfficeOption().equals("--estadual")) {
                 officeOption = 7;
+            } else {
+                officeOption = 6;
             }
-            else officeOption = 6;
 
-            while (s.hasNextLine()) {
-
-                String line = s.nextLine();
-                Scanner lineScanner = new Scanner(line);
-                lineScanner.useDelimiter(";");
-
-                int i = 0;
-
-                while(lineScanner.hasNext()) {
-
-                    try {
-                        token[i] = lineScanner.next().replace("\"", "");
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println("Invalid array index access error: " + e.getMessage());
-                    }
-
-                    i++;
-                }   
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                
+                for (int i = 0; i < parts.length && i < token.length; i++) {
+                    token[i] = parts[i].replace("\"", "");
+                }
 
                 if (currentRow != 0) { // row != csv header && officeOption == same as command line input
 
@@ -88,75 +80,61 @@ public class CSVReader {
                             poll.addDismissedCandidateToParty(c);
                         }
                     }
-        
+
                 }
                 currentRow++;
-                lineScanner.close();
-
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+}
 
-    public void votesReader(Election poll) {
-        try (FileInputStream fin = new FileInputStream(this.pollFilePath);
-        Scanner s = new Scanner(fin, "ISO-8859-1")) {
 
-            String[] token = new String[30];
-            int currentRow = 0;
-            int officeOption = 0;
-            String officeString="";
+public void votesReader(Election poll) {
+    try (FileInputStream fin = new FileInputStream(this.pollFilePath);
+         InputStreamReader isr = new InputStreamReader(fin, "ISO-8859-1");
+         BufferedReader br = new BufferedReader(isr)) {
 
-            if (poll.getOfficeOption().equals("--estadual")) {
-                officeOption = 7;
-                officeString = "--estadual";
+        String[] token = new String[30];
+        int currentRow = 0;
+        int officeOption = 0;
+        String officeString = "";
+
+        if (poll.getOfficeOption().equals("--estadual")) {
+            officeOption = 7;
+            officeString = "--estadual";
+        } else {
+            officeOption = 6;
+            officeString = "--federal";
+        }
+
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.split(";");
+
+            for (int i = 0; i < parts.length && i < token.length; i++) {
+                token[i] = parts[i].replace("\"", "");
             }
-            else  {
-                officeOption = 6;
-                officeString = "--federal";
-            }
 
-            while (s.hasNextLine()) {
-                String line = s.nextLine();
-                Scanner lineScanner = new Scanner(line);
-                lineScanner.useDelimiter(";");
+            if (currentRow != 0 && stringToInt(token[17]) == officeOption) { // row != csv header && officeOption == same as command line input
 
-                int i = 0;
+                int votableNumber = stringToInt(token[19]);         /* "NR_VOTAVEL" */
+                int totalVotes = stringToInt(token[21]);            /* "QT_VOTOS" */
 
-                while(lineScanner.hasNext()) {
-
-                    try {
-                        token[i] = lineScanner.next().replace("\"", "");
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println("Invalid array index access error: " + e.getMessage());
-                    }
-
-                    i++;
-                }                  
-
-                if (currentRow != 0 && stringToInt(token[17]) == officeOption /* "CD_CARGO" */) { // row != csv header && officeOption == same as command line input
-
-                
-                    int votableNumber = stringToInt(token[19]);         /* "NR_VOTAVEL" */
-                    int totalVotes = stringToInt(token[21]);            /* "QT_VOTOS" */
-
-                    if (votableNumber != 95 && votableNumber != 96 && votableNumber != 97 && votableNumber != 98) { // blank, invalid or spoiled votes
-                        poll.addVotes(totalVotes, votableNumber, officeString); 
-                    }
-                    
+                if (votableNumber != 95 && votableNumber != 96 && votableNumber != 97 && votableNumber != 98) {
+                    poll.addVotes(totalVotes, votableNumber, officeString);
                 }
-                currentRow++;
-                lineScanner.close();
-            }
 
-            poll.setTotalVotes();
-        } 
-        catch (Exception e) {
-            e.printStackTrace();
+            }
+            currentRow++;
         }
+
+        poll.setTotalVotes();
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+
 
     public int stringToInt(String str) {
         int value = 0;
