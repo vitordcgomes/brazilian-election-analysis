@@ -69,14 +69,18 @@ public class CSVReader {
                         String voteDestinationType = token[67];             /* "NM_TIPO_DESTINACAO_VOTOS" */
                         int candidacyCondition = stringToInt(token[68]);    /* "CD_SITUACAO_CANDIDATO_TOT" */
 
-                        Candidate c = new Candidate(officeOption, candidateNumber, candidateBallotName, partyNumber, partyAcronym, 
-                                                    federationNumber, birthDate, gender, turnStatus, voteDestinationType, candidacyCondition, poll.getElectionDate());
                             
                         if (candidacyCondition == 2 || candidacyCondition == 16) {
+                            Candidate c = new Candidate(officeOption, candidateNumber, candidateBallotName, partyNumber, partyAcronym, 
+                                                    federationNumber, birthDate, gender, turnStatus, voteDestinationType, candidacyCondition, poll.getElectionDate());
+
                             poll.addCandidateToParty(c);
                             poll.addCandidate(candidateNumber, c);
                         }
                         else if (candidacyCondition != 2 && candidacyCondition != 16 && voteDestinationType.equals("Válido (legenda)")) {
+                            Candidate c = new Candidate(officeOption, candidateNumber, candidateBallotName, partyNumber, partyAcronym, 
+                                                    federationNumber, birthDate, gender, turnStatus, voteDestinationType, candidacyCondition, poll.getElectionDate());
+                                                    
                             poll.addDismissedCandidateToParty(c);
                         }
                     }

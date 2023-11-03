@@ -1,6 +1,7 @@
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import Election.Election;
@@ -30,14 +31,14 @@ public class App {
             return;
         }
 
-        Date electionDate = null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        LocalDate electionDate = null;
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.forLanguageTag("pt-BR"));
 
         try {
-            // Parse the date string into a Date object
-            electionDate = dateFormat.parse(dateString);
+            // Parse the date string into a LocalDate object
+            electionDate = LocalDate.parse(dateString, dateFormat);
 
-        } catch (ParseException e) {
+        } catch (DateTimeParseException e) {
             e.printStackTrace(); // Handle the exception appropriately
         }
 
@@ -45,7 +46,6 @@ public class App {
         CSVReader reader = new CSVReader(candidatesFilePath, pollFilePath);
         reader.candidatesReader(poll);
         reader.votesReader(poll);
-
 
         Report report = new Report(poll);
         report.report1(); 
@@ -58,8 +58,6 @@ public class App {
         report.report8(); 
         report.report9(); 
         report.report10(); 
-
-        
 
     }
 }

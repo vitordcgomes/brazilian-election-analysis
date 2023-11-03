@@ -1,9 +1,9 @@
 package Election.Domain;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 public class Candidate implements Comparable<Candidate> {
     private int officeOption; //6 == federal; 7 == state
@@ -12,7 +12,7 @@ public class Candidate implements Comparable<Candidate> {
     private int partyNumber;
     private String partyAcronym;
     private int federationNumber; // -1 == isolated party
-    private Date birthDate;
+    private LocalDate birthDate;
     private int gender; //2 male and 4 female
     private int turnStatus; //2 or 3 to elected
     private String voteDestinationType; //"Válido (Legenda)" when this votes go to "list votes"
@@ -21,7 +21,7 @@ public class Candidate implements Comparable<Candidate> {
     private int age;
 
 
-    public Candidate(int office, int number, String ballotName, int partyNumber, String partyAcronym, int federationNumber, String birthDate,  int gender, int status, String voteDestination, int condition, Date electionDate) {
+    public Candidate(int office, int number, String ballotName, int partyNumber, String partyAcronym, int federationNumber, String birthDate,  int gender, int status, String voteDestination, int condition, LocalDate electionDate) {
 
         this.officeOption = office;
         this.candidateNumber = number;
@@ -30,13 +30,19 @@ public class Candidate implements Comparable<Candidate> {
         this.partyAcronym = partyAcronym;
         this.federationNumber = federationNumber;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.forLanguageTag("pt-BR"));
+
         try {
-            this.birthDate = sdf.parse(birthDate);
-            this.age = calculateAge(this.birthDate, electionDate);
-        } catch (ParseException e) {
-            //System.out.println("Date parse exception error: " + e.getMessage());
+            if (birthDate != null && !birthDate.isEmpty()) {
+                this.birthDate = LocalDate.parse(birthDate, dateFormat);
+                this.age = calculateAge(this.birthDate, electionDate);
+            } else {
+                System.out.println("Birth date is empty or null. Candidate: " + this.ballotName);
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Date parse exception error: " + e.getMessage());
         }
+
 
         this.gender = gender;
         this.turnStatus = status;
@@ -45,30 +51,25 @@ public class Candidate implements Comparable<Candidate> {
         this.nominalVotes = 0;
     }
 
-    public int calculateAge(Date birthDate, Date electionDate) {
-        Calendar birth = Calendar.getInstance();
-        Calendar election = Calendar.getInstance();
-
-        birth.setTime(birthDate);
-        election.setTime(electionDate);
-
-        int birthYear = birth.get(Calendar.YEAR);
-        int electionYear = election.get(Calendar.YEAR);
-
+    public int calculateAge(LocalDate birthDate, LocalDate electionDate) {
+        int birthYear = birthDate.getYear();
+        int electionYear = electionDate.getYear();
+    
         int age = electionYear - birthYear;
-
-        int birthMonth = birth.get(Calendar.MONTH);
-        int electinoMonth = election.get(Calendar.MONTH);
-
-        int birthDay = birth.get(Calendar.DAY_OF_MONTH);
-        int electionDay = election.get(Calendar.DAY_OF_MONTH);
-
-        if (electinoMonth < birthMonth || (electinoMonth == birthMonth && electionDay < birthDay)) {
+    
+        int birthMonth = birthDate.getMonthValue();
+        int electionMonth = electionDate.getMonthValue();
+    
+        int birthDay = birthDate.getDayOfMonth();
+        int electionDay = electionDate.getDayOfMonth();
+    
+        if (electionMonth < birthMonth || (electionMonth == birthMonth && electionDay < birthDay)) {
             age -= 1;
         }
-
+    
         return age;
     }
+    
 
     public void addVotes(int votes) {
         this.nominalVotes += votes;
@@ -98,7 +99,7 @@ public class Candidate implements Comparable<Candidate> {
         return federationNumber;
     }
     
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 

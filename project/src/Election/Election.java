@@ -1,6 +1,6 @@
 package Election;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -10,7 +10,7 @@ import Election.Domain.Party;
 public class Election {
     private Map<Integer, Candidate> candidates;
     private Map<Integer, Party> parties;
-    private Date electionDate;
+    private LocalDate electionDate;
     private String officeOption;
     private int seats; // == number of electeds
     private int listVotes;
@@ -18,7 +18,7 @@ public class Election {
     private int totalVotes;
     
 
-    public Election(Date electionDate, String officeOption) {
+    public Election(LocalDate electionDate, String officeOption) {
         this.candidates = new HashMap<Integer, Candidate>();
         this.parties = new HashMap<Integer, Party>();
         this.electionDate = electionDate;
@@ -126,7 +126,7 @@ public class Election {
         p.addDismissedCandidate(c.getCandidateNumber(), c);
     }
 
-    public Date getElectionDate() {
+    public LocalDate getElectionDate() {
         return electionDate;
     }
 
