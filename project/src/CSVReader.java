@@ -1,3 +1,7 @@
+/**
+ * This class reads CSV files containing candidate and poll information and processes the data for an election.
+ */
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -10,7 +14,14 @@ import java.io.File;
 public class CSVReader {
     private String candidatesFilePath;
     private String pollFilePath;
-
+    
+    /**
+     * Constructor for the CSVReader class.
+     *
+     * @param candidatesFilePath The file path for the candidates CSV file.
+     * @param pollFilePath       The file path for the poll CSV file.
+     * @throws IllegalArgumentException if either candidates file or poll file does not exist.
+     */
     public CSVReader(String candidatesFilePath, String pollFilePath) {
 
         File candidatesFile = new File(candidatesFilePath);
@@ -31,15 +42,29 @@ public class CSVReader {
         this.pollFilePath = pollFilePath;
     }
 
-
+    /**
+     * Gets the file path of the candidates CSV file.
+     *
+     * @return The file path of the candidates CSV file.
+     */
     public String getCandidatesFilePath() {
         return candidatesFilePath;
     }
 
+    /**
+     * Gets the file path of the poll CSV file.
+     *
+     * @return The file path of the poll CSV file.
+     */
     public String getPollFilePath() {
         return pollFilePath;
     }
 
+    /**
+     * Reads and processes candidate information from a CSV file.
+     *
+     * @param poll The Election object to which candidate information will be added.
+     */
     public void candidatesReader(Election poll) {
         try (FileInputStream fin = new FileInputStream(this.candidatesFilePath);
             InputStreamReader isr = new InputStreamReader(fin, "ISO-8859-1");
@@ -69,7 +94,7 @@ public class CSVReader {
                     String partyAcronym = token[28];                    /* "SG_PARTIDO" */
                     String partyName = token[29];                       /* "NM_PARTIDO" */
                     Party p = new Party(partyNumber, partyAcronym, partyName);
-                    poll.addParty(partyNumber, p); // os partidos "sumidos" nem chegam a entrar aqui
+                    poll.addParty(partyNumber, p); 
 
                     if (stringToInt(token[13]) == officeOption /* "CD_CARGO" */) {
 
@@ -106,53 +131,62 @@ public class CSVReader {
         }
 }
 
+    /**
+     * Reads and processes vote information from a CSV file.
+     *
+     * @param poll The Election object to which vote information will be added.
+     */
+    public void votesReader(Election poll) {
+        try (FileInputStream fin = new FileInputStream(this.pollFilePath);
+            InputStreamReader isr = new InputStreamReader(fin, "ISO-8859-1");
+            BufferedReader br = new BufferedReader(isr)) {
 
-public void votesReader(Election poll) {
-    try (FileInputStream fin = new FileInputStream(this.pollFilePath);
-         InputStreamReader isr = new InputStreamReader(fin, "ISO-8859-1");
-         BufferedReader br = new BufferedReader(isr)) {
+            String[] token = new String[30];
+            int currentRow = 0;
+            int officeOption = 0;
+            String officeString = "";
 
-        String[] token = new String[30];
-        int currentRow = 0;
-        int officeOption = 0;
-        String officeString = "";
-
-        if (poll.getOfficeOption().equals("--estadual")) {
-            officeOption = 7;
-            officeString = "--estadual";
-        } else {
-            officeOption = 6;
-            officeString = "--federal";
-        }
-
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] parts = line.split(";");
-
-            for (int i = 0; i < parts.length && i < token.length; i++) {
-                token[i] = parts[i].replace("\"", "");
+            if (poll.getOfficeOption().equals("--estadual")) {
+                officeOption = 7;
+                officeString = "--estadual";
+            } else {
+                officeOption = 6;
+                officeString = "--federal";
             }
 
-            if (currentRow != 0 && stringToInt(token[17]) == officeOption) { // row != csv header && officeOption == same as command line input
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
 
-                int votableNumber = stringToInt(token[19]);         /* "NR_VOTAVEL" */
-                int totalVotes = stringToInt(token[21]);            /* "QT_VOTOS" */
-
-                if (votableNumber != 95 && votableNumber != 96 && votableNumber != 97 && votableNumber != 98) {
-                    poll.addVotes(totalVotes, votableNumber, officeString);
+                for (int i = 0; i < parts.length && i < token.length; i++) {
+                    token[i] = parts[i].replace("\"", "");
                 }
 
+                if (currentRow != 0 && stringToInt(token[17]) == officeOption) { // row != csv header && officeOption == same as command line input
+
+                    int votableNumber = stringToInt(token[19]);         /* "NR_VOTAVEL" */
+                    int totalVotes = stringToInt(token[21]);            /* "QT_VOTOS" */
+
+                    if (votableNumber != 95 && votableNumber != 96 && votableNumber != 97 && votableNumber != 98) {
+                        poll.addVotes(totalVotes, votableNumber, officeString);
+                    }
+
+                }
+                currentRow++;
             }
-            currentRow++;
+
+            poll.setTotalVotes();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        poll.setTotalVotes();
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-}
 
-
+    /**
+     * Converts a string to an integer, if possible. Otherwise, prints exception.
+     *
+     * @param str The string to be converted.
+     * @return The integer value of the string, or 0 if the conversion fails.
+     */
     public int stringToInt(String str) {
         int value = 0;
 

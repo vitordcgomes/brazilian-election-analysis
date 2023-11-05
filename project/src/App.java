@@ -1,3 +1,7 @@
+/**
+ * The main class responsible for running the election analysis application.
+ */
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -7,19 +11,21 @@ import java.util.regex.Pattern;
 import Election.Election;
 import Election.Report.Report;
 
-// how to compile/run (from 'project' directory):
-// ant compile
-// ant jar
-// ant run-estadual || ant run-federal
-
 public class App {
+    /**
+     * The main entry point of the application.
+     * 
+     * @param args Command-line arguments containing office option, candidates file path, poll file path, and election date.
+     */
     public static void main(String[] args) {
         
+        // Check if the correct number of arguments is provided
         if (args.length != 4) {
             System.out.println("To run properly, use: java -jar deputies.jar --<office_option> <candidates_file_path> <poll_file_path> <election_date>");
             return;
         }
         
+        // Extract arguments
         String officeOption = args[0];
         String candidatesFilePath = args[1];
         String pollFilePath = args[2];
@@ -30,7 +36,7 @@ public class App {
             System.out.println("Invalid Date Format. Use dd/MM/yyyy");
             return;
         }
-
+        
         LocalDate electionDate = null;
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.forLanguageTag("pt-BR"));
 
@@ -42,11 +48,15 @@ public class App {
             e.printStackTrace(); // Handle the exception appropriately
         }
 
+        // Create a new Election instance
         Election poll = new Election(electionDate, officeOption);
+
+        // Read candidates and votes data from CSV files
         CSVReader reader = new CSVReader(candidatesFilePath, pollFilePath);
         reader.candidatesReader(poll);
         reader.votesReader(poll);
 
+        // Generate reports
         Report report = new Report(poll);
         report.report1(); 
         report.report2(); 
@@ -58,6 +68,6 @@ public class App {
         report.report8(); 
         report.report9(); 
         report.report10(); 
-
     }
+    
 }

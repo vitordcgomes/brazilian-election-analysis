@@ -1,3 +1,7 @@
+/**
+ * This class generates various reports based on the provided Election data.
+ */
+
 package Election.Report;
 
 import java.text.NumberFormat;
