@@ -5,19 +5,32 @@ import java.io.InputStreamReader;
 import Election.Election;
 import Election.Domain.Candidate;
 import Election.Domain.Party;
+import java.io.File;
 
 public class CSVReader {
     private String candidatesFilePath;
     private String pollFilePath;
 
-
     public CSVReader(String candidatesFilePath, String pollFilePath) {
 
-        //verify try-catch exceptions (file does not exist... )
+        File candidatesFile = new File(candidatesFilePath);
+        File pollFile = new File(pollFilePath);
+
+        if (!candidatesFile.exists() && pollFile.exists()) {
+            throw new IllegalArgumentException("Candidates file does not exist!\npath: " + candidatesFilePath + "");
+        }
+        else if(!pollFile.exists() && candidatesFile.exists()) {
+            throw new IllegalArgumentException("Poll file does not exist!\npath: " + pollFilePath + "");
+        }
+        else if (!candidatesFile.exists() && !pollFile.exists()) {
+            throw new IllegalArgumentException("Both Candidates and Poll files does not exist!\ncandidatesFilePath: " + candidatesFilePath +
+                                                "\npollFilePath: " + pollFilePath + "\n");
+        }
 
         this.candidatesFilePath = candidatesFilePath;
         this.pollFilePath = pollFilePath;
     }
+
 
     public String getCandidatesFilePath() {
         return candidatesFilePath;
@@ -80,7 +93,7 @@ public class CSVReader {
                         else if (candidacyCondition != 2 && candidacyCondition != 16 && voteDestinationType.equals("Válido (legenda)")) {
                             Candidate c = new Candidate(officeOption, candidateNumber, candidateBallotName, partyNumber, partyAcronym, 
                                                     federationNumber, birthDate, gender, turnStatus, voteDestinationType, candidacyCondition, poll.getElectionDate());
-                                                    
+
                             poll.addDismissedCandidateToParty(c);
                         }
                     }

@@ -15,6 +15,11 @@ public class Report {
     private List<Party> sortParties;
     private int seats;
 
+    /**
+     * Constructor for the Report class.
+     *
+     * @param poll The Election object to generate reports for.
+     */
     public Report(Election poll) {
         this.poll = poll;
         this.seats = poll.getSeats();
@@ -27,12 +32,18 @@ public class Report {
 
     }
 
+    /**
+     * Generates a report showing the number of available seats in the election.
+     */
     public void report1() {
         NumberFormat n = portugueseFormat();
 
         System.out.println("Número de vagas: " + n.format(poll.getSeats()) + "\n");
     }
 
+    /**
+     * Generates a report listing elected candidates for a specified office option.
+     */
     public void report2() {
         NumberFormat n = portugueseFormat();
 
@@ -52,6 +63,9 @@ public class Report {
         System.out.print("\n");
     }
 
+    /**
+     * Generates a report listing the most voted candidates, respecting the number of available seats.
+     */
     public void report3() {
         NumberFormat n = portugueseFormat();
 
@@ -67,6 +81,9 @@ public class Report {
         System.out.print("\n");
     }
 
+    /**
+     * Generates a report listing candidates who would have been elected in a majoritarian system but weren't.
+     */
     public void report4() {
         NumberFormat n = portugueseFormat();
 
@@ -86,6 +103,9 @@ public class Report {
         System.out.print("\n");
     }
 
+    /**
+     * Generates a report listing elected candidates who benefited from the proportional system.
+     */
     public void report5() {
         NumberFormat n = portugueseFormat();
 
@@ -102,6 +122,9 @@ public class Report {
         System.out.print("\n");
     }
 
+    /**
+     * Generates a report showing the total votes and elected candidates for each party.
+     */
     public void report6() {
         NumberFormat n = portugueseFormat();
 
@@ -130,6 +153,9 @@ public class Report {
         System.out.print("\n");
     }
 
+    /**
+     * Generates a report listing the first and last placed candidates in each party.
+     */
     public void report7() {
         NumberFormat n = portugueseFormat();
 
@@ -210,6 +236,9 @@ public class Report {
         System.out.print("\n");
     }
 
+    /**
+     * Generates a report showing the age groups of elected candidates.
+     */
     public void report8() {
         NumberFormat nf = portugueseFormat();
         doubleFormat(nf);
@@ -257,6 +286,9 @@ public class Report {
 
     }
 
+    /**
+     * Generates a report showing the gender distribution of elected candidates.
+     */
     public void report9() {
         NumberFormat nf = portugueseFormat();
         doubleFormat(nf);
@@ -284,6 +316,9 @@ public class Report {
 
     }
 
+    /**
+     * Generates a report summarizing the total votes, nominal votes, and list votes.
+     */
     public void report10() {
         double nominalPercentage = (double)poll.getNominalVotes() / (double)poll.getTotalVotes() * 100;
         double listPercentage = (double)poll.getListVotes() / (double)poll.getTotalVotes() * 100;
@@ -297,10 +332,20 @@ public class Report {
                         "\nTotal de votos de legenda:\t" + n.format(poll.getListVotes()) + " (" + nf.format(listPercentage) + "%)");
     }
 
+    /**
+     * Returns a NumberFormat instance for the Portuguese locale.
+     *
+     * @return A NumberFormat instance for Portuguese formatting.
+     */
     public NumberFormat portugueseFormat() {
         return NumberFormat.getInstance(Locale.forLanguageTag("pt-BR"));
     }
 
+    /**
+     * Sets the minimum and maximum fraction digits for a NumberFormat instance.
+     *
+     * @param nf The NumberFormat instance to be formatted.
+     */
     public void doubleFormat(NumberFormat nf) {
         nf.setMinimumFractionDigits(2); 
         nf.setMaximumFractionDigits(2);
