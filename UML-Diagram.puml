@@ -1,0 +1,65 @@
+@startuml brazilian-elections-analysis
+
+Election -> "0..*" Candidate : Mapeia >
+Election -> "0..*" Party : Mapeia >
+
+class Election {
+    -candidates: HashMap
+    -parties: HashMap
+    -electionDate: LocalDate
+    -officeOption: String
+    -seats: int
+    -listVotes: int
+    -nominalVotes: int
+    -totalVotes: int
+}
+
+class CSVReader{
+    -candidatesFilePath: String
+    -pollFilePath: String
+}
+note bottom of CSVReader: Acessado diretamente pelo App
+
+Candidate "0..*" <--> "1" Party : Participa de >
+ 
+class Candidate{
+    -officeOption: int
+    -candidateNumber: int
+    -ballotName: String
+    -partyNumber: int
+    -partyAcronym: String
+    -federationNumber: int
+    -birthDate: LocalDate
+    -gender: int
+    -turnStatus: int
+    -voteDestinationType: String
+    -candidacyCondition: int
+    -nominalVotes: int
+    -age: int
+}
+
+class Party{
+    -partyNumber: int
+    -partyAcronym: String
+    -partyName: String
+    -numberOfCandidates: int
+    -listVotes: int
+    -nominalVotes: int
+    -totalVotes: int
+    -candidates: HashMap
+    -dismissedCandidates: HashMap
+}
+
+class Report {
+    -poll: Election
+    -sortCandidates: List
+    -sortParties: List
+    -seats: int
+}
+
+Report -> "1" Election : Analisa >
+Report --right> "0..*" Candidate : Ordena > 
+Report --> "0..*" Party : Ordena >
+
+
+@enduml
